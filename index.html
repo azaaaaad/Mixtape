@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Girl - Mixtape</title>
+    <style>
+        /* --- DESIGN & AESTHETICS (NEO-BRUTALISM) --- */
+        body {
+            background-color: #fdf6e9; 
+            color: #000; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Decorative Background Shapes */
+        .shape {
+            position: absolute;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            z-index: -1;
+        }
+        .shape.blue-square { width: 30px; height: 30px; background-color: #4A90E2; top: 20%; left: 10%; }
+        .shape.yellow-circle { width: 40px; height: 40px; background-color: #F8E71C; border-radius: 50%; top: 60%; left: 15%; }
+        .shape.pink-square { width: 25px; height: 25px; background-color: #FF85A2; top: 75%; right: 15%; transform: rotate(15deg); }
+        .shape.green-circle { width: 35px; height: 35px; background-color: #50E3C2; top: 15%; right: 12%; border-radius: 50%; }
+        .shape.star {
+            border: none;
+            box-shadow: none;
+            font-size: 2rem;
+            color: #F5A623;
+            text-shadow: 2px 2px 0px #000;
+            top: 40%;
+            right: 8%;
+        }
+
+        /* Pop-up Letter Button (?) */
+        .help-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #F8E71C; /* Vibrant yellow */
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 0;
+        }
+        .help-btn:hover {
+            background-color: #50E3C2; /* Changes to teal on hover */
+        }
+
+        /* Brutalist Header */
+        header h1 {
+            font-size: 1.8rem; 
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            background-color: #fff;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px #000;
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+
+        /* The Cassette Centerpiece */
+        #cassette-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        .central-graphic {
+            max-width: 950px; 
+            width: 100%;
+            filter: drop-shadow(10px 10px 0px rgba(0, 0, 0, 0.8)); 
+            transition: all 0.3s ease;
+        }
+
+        @keyframes gentle-movement {
+            0% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-4px) rotate(1deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(4px) rotate(-1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .playing-animation {
+            animation: gentle-movement 3s ease-in-out infinite;
+        }
+
+        /* Brutalist Audio Controls */
+        #controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #fff;
+            border: 3px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            padding: 15px;
+            border-radius: 12px;
+            z-index: 5;
+        }
+
+        button {
+            background-color: #fff;
+            border: 3px solid #000;
+            border-radius: 6px;
+            padding: 8px 16px; 
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 1rem; 
+            color: #000;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        button#prev-btn:hover { background-color: #FF85A2; } 
+        button#play-pause-btn:hover { background-color: #50E3C2; } 
+        button#next-btn:hover { background-color: #F8E71C; } 
+        
+        button#repeat-btn {
+            background-color: #fff;
+        }
+        button#repeat-btn.active {
+            background-color: #4A90E2; 
+            color: #fff;
+        }
+
+        /* Brutalist Playlist */
+        #playlist-container {
+            width: 100%;
+            max-width: 450px; 
+            background: #fff; 
+            border: 3px solid #000;
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px #000;
+            overflow: hidden; 
+            z-index: 5;
+        }
+
+        #playlist-container h2 {
+            margin: 0;
+            text-align: center;
+            background-color: #FF6B6B; 
+            color: #fff;
+            border-bottom: 3px solid #000;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        #tracklist {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .track-item {
+            padding: 15px 20px;
+            border-bottom: 3px solid #000;
+            cursor: pointer;
+            font-size: 1.1rem; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .track-item::before {
+            content: "▶";
+            margin-right: 15px;
+            font-size: 0.8rem;
+            opacity: 0.3;
+        }
+
+        .track-item:last-child {
+            border-bottom: none;
+        }
+
+        .track-item:hover {
+            background-color: #f0f0f0; 
+        }
+
+        .track-item.playing {
+            background-color: #50E3C2; 
+        }
+        
+        .track-item.playing::before {
+            opacity: 1;
+        }
+
+        /* --- MODAL / POP-UP STYLING --- */
+        .modal-overlay {
+            display: none; /* Hidden until clicked */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px); 
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fdf6e9;
+            border: 4px solid #000;
+            box-shadow: 12px 12px 0px #000;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 85vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 8px;
+            overflow-y: auto; 
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #FF6B6B;
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            z-index: 101;
+        }
+        
+        .close-btn:hover {
+            background-color: #FF85A2;
+        }
+
+        .letter-img {
+            max-width: 100%;
+            height: auto;
+            border: 2px dashed #000; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ? Button for the Letter -->
+    <button id="letter-btn" class="help-btn">?</button>
+
+    <!-- Decorative Background Elements -->
+    <div class="shape blue-square"></div>
+    <div class="shape yellow-circle"></div>
+    <div class="shape pink-square"></div>
+    <div class="shape green-circle"></div>
+    <div class="shape star">✦</div>
+
+    <header>
+        <h1>Your Mixtape</h1>
+    </header>
+
+    <!-- THE CASSETTE -->
+    <div id="cassette-container">
+        <img id="cassette-img" src="cas.png" alt="Hand-drawn cassette" class="central-graphic">
+    </div>
+
+    <!-- HIDDEN AUDIO PLAYER -->
+    <audio id="audio-player"></audio>
+
+    <!-- CONTROLS -->
+    <div id="controls-container">
+        <button id="prev-btn">Prev</button>
+        <button id="play-pause-btn">Play</button>
+        <button id="next-btn">Next</button>
+        <button id="repeat-btn">Repeat: Off</button>
+    </div>
+
+    <!-- SONG LIST (Now configured for 10 songs) -->
+    <section id="playlist-container">
+        <h2>The Tracks</h2>
+        <ol id="tracklist">
+            <li class="track-item" data-src="track1.mp3">Sheesha</li>
+            <li class="track-item" data-src="track2.mp3">Ami sudhu khujechi amay</li>
+            <li class="track-item" data-src="track3.mp3">Jaiye Sajana</li>
+            <li class="track-item" data-src="track4.mp3">Chand si mehbooba ho meri</li>
+            <li class="track-item" data-src="track5.mp3">Kun faya kun</li>
+            <li class="track-item" data-src="track6.mp3">Haay bhalobashi</li>
+            <li class="track-item" data-src="track7.mp3">Khwaja mere khwaja</li>
+            <li class="track-item" data-src="track8.mp3">Sanun nahar wale pool</li>
+            <li class="track-item" data-src="track9.mp3">Ami chini go chini tomare</li>
+            <li class="track-item" data-src="track10.mp3">Mai agar kahoon</li>
+        </ol>
+    </section>
+
+    <!-- THE MODAL (Pop-up for the Letter) -->
+    <div id="letter-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="close-btn">X</button>
+            <img src="letter.png" alt="Handwritten Letter" class="letter-img">
+        </div>
+    </div>
+
+    <script>
+        /* --- FUNCTIONALITY & LOGIC --- */
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const cassetteImg = document.getElementById('cassette-img');
+        const trackElements = document.querySelectorAll('.track-item');
+        
+        // Modal elements
+        const letterBtn = document.getElementById('letter-btn');
+        const letterModal = document.getElementById('letter-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        let currentTrackIndex = 0;
+        let isRepeating = false;
+        let isPlaying = false;
+
+        function loadTrack(index) {
+            trackElements.forEach(t => t.classList.remove('playing'));
+            const currentTrack = trackElements[index];
+            currentTrack.classList.add('playing');
+            audioPlayer.src = currentTrack.getAttribute('data-src');
+            currentTrackIndex = index;
+        }
+
+        function playTrack() {
+            audioPlayer.play();
+            isPlaying = true;
+            playPauseBtn.innerText = "Pause";
+            cassetteImg.classList.add('playing-animation');
+        }
+
+        function pauseTrack() {
+            audioPlayer.pause();
+            isPlaying = false;
+            playPauseBtn.innerText = "Play";
+            cassetteImg.classList.remove('playing-animation');
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseTrack();
+            } else {
+                if (!audioPlayer.src) {
+                    loadTrack(0); 
+                }
+                playTrack();
+            }
+        });
+
+        function nextTrack() {
+            currentTrackIndex++;
+            if (currentTrackIndex >= trackElements.length) {
+                currentTrackIndex = 0; 
+            }
+            loadTrack(currentTrackIndex);
+            playTrack();
+        }
+        nextBtn.addEventListener('click', nextTrack);
+
+        function prevTrack() {
+            currentTrackIndex--;
+            if (currentTrackIndex < 0) {
+                currentTrackIndex = trackElements.length - 1; 
+            }
+            loadTrack(currentTrackIndex);
+            playTrack();
+        }
+        prevBtn.addEventListener('click', prevTrack);
+
+        repeatBtn.addEventListener('click', () => {
+            isRepeating = !isRepeating;
+            if (isRepeating) {
+                repeatBtn.innerText = "Repeat: On";
+                repeatBtn.classList.add('active');
+            } else {
+                repeatBtn.innerText = "Repeat: Off";
+                repeatBtn.classList.remove('active');
+            }
+        });
+
+        trackElements.forEach((track, index) => {
+            track.addEventListener('click', () => {
+                loadTrack(index);
+                playTrack();
+            });
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            if (isRepeating) {
+                playTrack(); 
+            } else {
+                nextTrack(); 
+            }
+        });
+
+        /* Modal Logic */
+        letterBtn.addEventListener('click', () => {
+            letterModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            letterModal.style.display = 'none';
+        });
+
+        // Allows closing the letter by clicking on the dark background
+        letterModal.addEventListener('click', (e) => {
+            if (e.target === letterModal) {
+                letterModal.style.display = 'none';
+            }
+        });
+
+        loadTrack(0);
+    </script>
+</body>
+</html>
